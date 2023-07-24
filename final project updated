@@ -1,0 +1,64 @@
+# Import necessary modules
+import time
+import pygame.mixer
+
+# Initialize Pygame mixer for sound
+def initialize_sound():
+    pygame.mixer.init()
+
+# Play specified sound file
+def play_sound(sound_file):
+    sound = pygame.mixer.Sound(sound_file)
+    sound.play()
+    pygame.time.wait(int(sound.get_length() * 1000))
+
+# Fuction play the beep sound
+def play_beep_sound():
+    play_sound("/Users/ralphbonnet/Desktop/Python/windsound.mp3")
+
+# function play the alarm sound
+def play_alarm_sound():
+    play_sound("/Users/ralphbonnet/Desktop/Python/Alarm-clock-ring-sound.mp3")
+
+# function to get user input for countdown time and calculate total seconds
+def get_user_input():
+    try:
+        hours = int(input("Enter the hours: "))
+        minutes = int(input("Enter the minutes: "))
+        seconds = int(input("Enter the seconds: "))
+        total_seconds = hours * 3600 + minutes * 60 + seconds
+        return total_seconds
+    except ValueError:
+        print("Invalid input. Please enter valid time values.")
+        return None
+
+# Format total_seconds into hours, minutes, and seconds format
+def format_time(total_seconds):
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+# Run the countdown timer and display time remaining
+def run_countdown(total_seconds):
+    while total_seconds > 0:
+        print(f"Time Remaining: {format_time(total_seconds)}", end='\r')
+        time.sleep(1)
+        total_seconds -= 1
+
+        if total_seconds == 0:
+            play_alarm_sound()
+        elif total_seconds % 60 == 0:
+            play_beep_sound()
+
+    print("\nTime's up!")
+
+# Main function to initiate the countdown timer
+def main():
+    print("Welcome to the Countdown Timer!")
+    initialize_sound()
+    total_seconds = get_user_input()
+    if total_seconds is not None:
+        run_countdown(total_seconds)
+
+if __name__ == "__main__":
+    main()
